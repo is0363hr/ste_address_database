@@ -1,56 +1,49 @@
-{
-    'address_components':[
-        {
-            'long_name': 'Aioicho',
-            'short_name': 'Aioicho',
-            'types':['political', 'sublocality', 'sublocality_level_2']
-        },
-        {
-            'long_name': 'Kochi',
-            'short_name': 'Kochi',
-            'types': ['locality', 'political']
-        },
-        {
-            'long_name': 'Kochi',
-            'short_name': 'Kochi',
-            'types': ['administrative_area_level_1', 'political']
-        },
-        {
-            'long_name': 'Japan',
-            'short_name': 'JP',
-            'types': ['country', 'political']
-        },
-        {
-            'long_name': '780-0054',
-            'short_name': '780-0054',
-            'types': ['postal_code']
-        }
-    ],
-    'formatted_address': 'Aioicho, Kochi, 780-0054, Japan',
-    'geometry': {
-        'bounds': {
-            'northeast': {
-                'lat': 33.5654085,
-                'lng': 133.5476424
-            },
-            'southwest': {
-                'lat': 33.5638021,
-                'lng': 133.544137
-            }
-        },
-        'location': {'lat': 33.5648591, 'lng': 133.5459739},
-        'location_type': 'APPROXIMATE',
-        'viewport': {
-            'northeast': {
-                'lat': 33.56595428029149,
-                'lng': 133.5476424
-            },
-            'southwest': {
-                'lat': 33.56325631970849,
-                'lng': 133.544137
-            }
-        }
-    },
-    'place_id': 'ChIJfc6CZ0sZTjURHZepeRYcBZg',
-    'types': ['political', 'sublocality', 'sublocality_level_2']
-}
+# coding: utf-8
+import pandas as pd
+import csv
+from os import read
+from pprint import pprint
+from config.api import GEOCODING_API
+from config.sample_address import ADDRESS
+import googlemaps
+
+INPUT_PATH = './39KOCHI.CSV'
+
+
+def read_csv():
+    with open(INPUT_PATH, encoding="shift_jis") as f:
+        print(f.read())
+
+
+def pandas_csv():
+    df = pd.read_csv(INPUT_PATH, encoding="shift_jis", header=None)
+    # 住所名抽出
+    address = df.iloc[:, 6:9].values.tolist()
+    # for add in address:
+    #     if add[2] == '以下に掲載がない場合':
+    #         continue
+    #     else:
+    #         print(add)
+    return address
+
+
+def geocoding(data):
+    gmaps = googlemaps.Client(key=GEOCODING_API)
+    result = gmaps.geocode(data)
+    return result
+
+
+def main():
+    # data = pandas_csv()
+    # sample = data[1][0] + data[1][1] + data[1][2]
+    # print(sample)
+    sample = ADDRESS
+    result = geocoding(sample)
+    lat = result[0]["geometry"]["location"]["lat"]
+    lng = result[0]["geometry"]["location"]["lng"]
+    pprint(result)
+    print(lat, lng)
+
+
+if __name__ == '__main__':
+    main()

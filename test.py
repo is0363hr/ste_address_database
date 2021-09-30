@@ -3,7 +3,7 @@ import pandas as pd
 import csv
 from os import read
 from pprint import pprint
-from config.google_setting import GOOGLEMAP_API_KEY
+from config.api import GEOCODING_API
 import googlemaps
 
 INPUT_PATH = './39KOCHI.CSV'
@@ -27,7 +27,7 @@ def pandas_csv():
 
 
 def geocoding(data):
-    gmaps = googlemaps.Client(key=GOOGLEMAP_API_KEY)
+    gmaps = googlemaps.Client(key=GEOCODING_API)
     result = gmaps.geocode(data)
     return result
 
