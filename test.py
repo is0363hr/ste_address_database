@@ -35,6 +35,7 @@ def geocoding(data):
 def main():
     data = pandas_csv()
     sample = data[1][0] + data[1][1] + data[1][2]
+    sample = "宮城県仙台市太白区鹿野3丁目"
     print(sample)
     result = geocoding(sample)
     lat = result[0]["geometry"]["location"]["lat"]

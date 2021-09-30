@@ -1,3 +1,4 @@
 config/api.py
 config/__pycache__/google_setting.cpython-37.pyc
 config/google_setting.py
+.DS_Store
