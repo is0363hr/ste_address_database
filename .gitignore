@@ -1,6 +1,3 @@
-config/api.py
-config/__pycache__/google_setting.cpython-37.pyc
-config/google_setting.py
-config/__pycache__/api.cpython-37.pyc
 *.pyc
-config/sample_address.py
+config/*
+.DS_Store
