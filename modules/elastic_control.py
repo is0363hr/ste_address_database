@@ -43,8 +43,8 @@ class Elasticsearch_modules:
         self.es.update(index=index, id=id, body=document)
 
 
-    def convert_document(index, document):
-        # bulkで扱えるデータ構造に変換します
+    def convert_document(self, index, document):
+        # bulkで扱えるデータ構造に変換
         for doc in document:
             yield {
                 "_op_type": "create",
@@ -101,32 +101,56 @@ class Elasticsearch_modules:
         return self.es.count(index=index)
 
 
-def main():
-    mapping = {
-        "mappings": {
-            "properties": {
-                "zip_code": {"type": "text"},
-                "prefectures_kana": {"type": "text"},
-                "municipalities_kana": {"type": "text"},
-                "town_area_kana": {"type": "text"},
-                "prefectures_kanji": {"type": "text"},
-                "municipalities_kanji": {"type": "text"},
-                "town_area_kanji": {"type": "text"},
-                "point_location": {"type": "geo_point"},
-                "area_location": {
-                    "properties": {
-                        "northeast": {"type": "geo_point"},
-                        "southwest": {"type": "geo_point"},
-                    },
+    def address_doc_reset(self):
+        mapping = {
+            "mappings": {
+                "properties": {
+                    "zip_code": {"type": "text"},
+                    "prefectures_kana": {"type": "text"},
+                    "municipalities_kana": {"type": "text"},
+                    "town_area_kana": {"type": "text"},
+                    "prefectures_kanji": {"type": "text"},
+                    "municipalities_kanji": {"type": "text"},
+                    "town_area_kanji": {"type": "text"},
+                    "point_location": {"type": "geo_point"},
+                    "area_location": {
+                        "properties": {
+                            "northeast": {"type": "geo_point"},
+                            "southwest": {"type": "geo_point"},
+                        },
+                    }
                 }
             }
         }
-    }
-    index = "address"
+        index = "address"
+        self.delete_index(index)
+        self.create_data(index, mapping)
+        pprint(self.get_mapping(index))
+
+
+    def j_lis_doc_reset(self):
+        mapping = {
+            "mappings": {
+                "properties": {
+                    "prefectures_kanji": {"type": "text"},
+                    "municipalities_kanji": {"type": "text"},
+                    "town_area_kanji": {"type": "text"},
+                    "banchi": {"type": "text"},
+                    "point_location": {"type": "geo_point"},
+                }
+            }
+        }
+        index = "j_lis"
+        self.delete_index(index)
+        self.create_data(index, mapping)
+        pprint(self.get_mapping(index))
+
+
+
+def main():
     elm = Elasticsearch_modules()
-    elm.create_data(index, mapping)
-    # elm.update_mapping(index, mapping)
-    pprint(elm.get_mapping(index))
+    # elm.address_doc_reset()
+    elm.j_lis_doc_reset()
 
 
 if __name__ == '__main__':
